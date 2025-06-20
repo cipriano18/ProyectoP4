@@ -28,3 +28,10 @@ Puedes iniciar sesión con los siguientes usuarios para acceder a las diferentes
 |--------------|----------|-------------|
 | **Administrador** | `analu123` | `secure123` |
 | **Graduado**      | `reyner`   | `1234`      |
+
+## Vista de administradores
+![Image](https://github.com/user-attachments/assets/21c92c1a-de4b-4923-b971-c0f1e7c2bdda)
+
+
+## Vista de graduados
+![Image](https://github.com/user-attachments/assets/2568af38-837c-4e0c-9c68-4c342cb008cc)
