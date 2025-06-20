@@ -1,7 +1,19 @@
 import React from "react";
 
+interface PersonaForm {
+  p_nombre?: string;
+  s_nombre?: string;
+  p_apellido?: string;
+  s_apellido?: string;
+  ced_expo?: string;
+  correo_elect?: string;
+  tel_personal?: string;
+  tel_trabajo?: string;
+  direc?: string;
+}
+
 interface Props {
-  form: any;
+  form: PersonaForm;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
