@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model gra_carreras {
+  carrera_id             Int                     @id @default(autoincrement())
+  area                   String?                 @db.VarChar(100)
+  nombre                 String?                 @db.VarChar(100)
+
+  gra_graduadoxcarrera   gra_graduadoxcarrera[]
+}
+
+model gra_cursos {
+  curso_id               Int                     @id @default(autoincrement())
+  nombre                 String?                 @db.VarChar(100)
+  descripcion            String?                 @db.VarChar(200)
+  fecha                  DateTime?               @db.Date
+  hora_ini               String?                 @db.VarChar(10)
+  modalidad              String?                 @db.VarChar(50)
+  hora_fin               String?                 @db.VarChar(10)
+  categoria              String?                 @db.VarChar(100)
+
+  gra_graduadoxcurso     gra_graduadoxcurso[]
+  gra_exponentexcurso    gra_exponentexcurso[]
+}
+
+model gra_exponentes {
+  exponente_id           Int                     @id @default(autoincrement())
+  especialidad           String?                 @db.VarChar(200)
+  persona_id             Int?
+
+  gra_personas           gra_personas?           @relation(fields: [persona_id], references: [persona_id])
+  gra_exponentexcurso    gra_exponentexcurso[]
+
+  @@index([persona_id], map: "fk_persona_expo_idx")
+}
+
+model gra_exponentexcurso {
+  ExC_id                 Int                     @id @default(autoincrement())
+  exponente_id           Int
+  curso_id               Int
+
+  gra_exponentes         gra_exponentes          @relation(fields: [exponente_id], references: [exponente_id])
+  gra_cursos             gra_cursos              @relation(fields: [curso_id], references: [curso_id])
+
+  @@index([curso_id], map: "fk_exponentexc_curso")
+  @@index([exponente_id], map: "fk_exponentexc_exponente")
+}
+
+model gra_graduados {
+  graduado_id            Int                     @id @default(autoincrement())
+  anio_egreso            String?                 @db.VarChar(4)
+  persona_id             Int?
+  usuario_id             Int?
+
+  gra_personas           gra_personas?           @relation(fields: [persona_id], references: [persona_id])
+  gra_usuarios           gra_usuarios?           @relation(fields: [usuario_id], references: [usuario_id])
+
+  gra_graduadoxcarrera   gra_graduadoxcarrera[]  @relation("GraduadoCarreras")
+  gra_graduadoxcurso     gra_graduadoxcurso[]    @relation("GraduadoCursos")
+
+  @@index([persona_id], map: "fk_persona_graduado_idx")
+  @@index([usuario_id], map: "fk_persona_usuario_idx")
+}
+
+model gra_graduadoxcarrera {
+  GXCa_id                Int                     @id @default(autoincrement())
+  graduado_id            Int
+  carrera_id             Int
+
+  gra_graduados          gra_graduados           @relation(fields: [graduado_id], references: [graduado_id], name: "GraduadoCarreras")
+  gra_carreras           gra_carreras            @relation(fields: [carrera_id], references: [carrera_id])
+
+  @@index([carrera_id], map: "fk_gxca_carrera")
+  @@index([graduado_id], map: "fk_gxca_graduado")
+}
+
+model gra_graduadoxcurso {
+  GxCu_id                Int                     @id @default(autoincrement())
+  curso_id               Int
+  graduado_id            Int
+
+  gra_graduados          gra_graduados           @relation(fields: [graduado_id], references: [graduado_id], name: "GraduadoCursos")
+  gra_cursos             gra_cursos              @relation(fields: [curso_id], references: [curso_id])
+
+  @@index([curso_id], map: "fk_gxc_curso")
+  @@index([graduado_id], map: "fk_gxc_graduado")
+}
+
+model gra_personas {
+  persona_id             Int                     @id @default(autoincrement())
+  p_nombre               String?                 @db.VarChar(50)
+  s_nombre               String?                 @db.VarChar(50)
+  p_apellido             String?                 @db.VarChar(50)
+  s_apellido             String?                 @db.VarChar(50)
+  cedula                 String?                 @db.VarChar(30)
+  correo                 String?                 @db.VarChar(100)
+  tel_personal           String?                 @db.VarChar(20)
+  tel_trabajo            String?                 @db.VarChar(20)
+  direc                  String?                 @db.VarChar(200)
+
+  gra_graduados          gra_graduados[]
+  gra_exponentes         gra_exponentes[]
+}
+
+model gra_usuarios {
+  usuario_id             Int                     @id @default(autoincrement())
+  nombre                 String?                 @db.VarChar(50)
+  contrasenia            String?                 @db.VarChar(15)
+  rol                    String?                 @db.VarChar(1)
+
+  gra_graduados          gra_graduados[]
+}
