@@ -1,8 +1,8 @@
-"use client";
+    "use client";
 
-import { useEffect, useState } from "react";
+    import { useEffect, useState } from "react";
 
-interface Curso {
+    interface Curso {
     curso_id: number;
     categoria: string;
     nombre: string;
@@ -11,57 +11,40 @@ interface Curso {
     hora_ini: string;
     hora_fin: string;
     modalidad: string;
-}
+    }
 
-export default function MisCursosPage() {
+    export default function MisCursosPage() {
     const [cursos, setCursos] = useState<Curso[]>([]);
     const [busqueda, setBusqueda] = useState("");
 
     useEffect(() => {
-        // Datos de prueba simulados
-        const mockCursos: Curso[] = [
-            {
-                curso_id: 1,
-                categoria: "Tecnología",
-                nombre: "Introducción a React",
-                descripcion: "Curso básico para aprender los fundamentos de React.js",
-                fecha: "2025-06-20",
-                hora_ini: "09:00",
-                hora_fin: "12:00",
-                modalidad: "Virtual",
-            },
-            {
-                curso_id: 2,
-                categoria: "Desarrollo Personal",
-                nombre: "Oratoria Profesional",
-                descripcion: "Mejora tus habilidades de comunicación en público",
-                fecha: "2025-07-01",
-                hora_ini: "13:30",
-                hora_fin: "16:00",
-                modalidad: "Presencial",
-            },
-            {
-                curso_id: 3,
-                categoria: "Arte",
-                nombre: "Fotografía Digital Avanzada",
-                descripcion: "Técnicas avanzadas de fotografía digital y edición",
-                fecha: "2025-08-15",
-                hora_ini: "10:00",
-                hora_fin: "13:00",
-                modalidad: "Virtual",
-            },
-            {
-                curso_id: 4,
-                categoria: "Negocios",
-                nombre: "Marketing Digital para Emprendedores",
-                descripcion: "Estrategias de marketing digital para startups, diseño de estrategias, modelos de negocio y ventas, Aprende a crear campañas efectivasS",
-                fecha: "2025-09-05",
-                hora_ini: "14:00",
-                hora_fin: "17:00",
-                modalidad: "Presencial",
-            },
-        ];
-        setCursos(mockCursos);
+        const fetchCursos = async () => {
+        try {
+            const usuario_id = Number(localStorage.getItem("usuario_id")); // Asegúrate de guardar este ID al hacer login
+            if (!usuario_id) {
+            console.error("ID de usuario no encontrado.");
+            return;
+            }
+
+            const res = await fetch("/api/mycourses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario_id }),
+            });
+
+            if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.error || "Error al obtener cursos");
+            }
+
+            const data = await res.json();
+            setCursos(data);
+        } catch (error) {
+            console.error("Error al cargar cursos:", error);
+        }
+        };
+
+        fetchCursos();
     }, []);
 
     const cursosFiltrados = cursos.filter((c) =>

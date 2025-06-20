@@ -33,6 +33,8 @@ export default function LoginPage() {
         return;
       }
 
+      localStorage.setItem("usuario_id", data.usuario_id);
+
       if (data.rol === "A") {
         router.push("/ui/dashboard");
       } else if (data.rol === "G") {

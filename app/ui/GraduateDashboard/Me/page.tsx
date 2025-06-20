@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { UserIcon } from '@heroicons/react/24/outline';
-interface Graduado {
+
+    interface Graduado {
     id: number;
     p_nombre: string;
     s_nombre?: string;
@@ -15,50 +16,45 @@ interface Graduado {
     direc?: string;
     año_egreso: string;
     nombre_usuario?: string;
-}
+    }
 
-export default function MePage() {
+    export default function MePage() {
     const [graduado, setGraduado] = useState<Graduado | null>(null);
     const [form, setForm] = useState<Partial<Graduado>>({});
     const [contraseña, setContraseña] = useState("");
     const [mensaje, setMensaje] = useState("");
 
     useEffect(() => {
-        // // Cuando se tenga el backend, se puede usar este fetch:
-        // fetch("/api/me")
-        //   .then((res) => res.json())
-        //   .then((data) => {
-        //     setGraduado(data);
-        //     setForm({
-        //       correo_elect: data.correo_elect,
-        //       tel_personal: data.tel_personal,
-        //       tel_trabajo: data.tel_trabajo,
-        //       direc: data.direc,
-        //     });
-        //   });
+        const usuario_id = localStorage.getItem("usuario_id");
 
-        // De momento usamos datos falsos para pruebas
-        const mock: Graduado = {
-            id: 1,
-            p_nombre: "Laura",
-            s_nombre: "María",
-            p_apellido: "Gómez",
-            s_apellido: "Hernández",
-            ced_expo: "123456789",
-            correo_elect: "laura@example.com",
-            tel_personal: "8888-1234",
-            tel_trabajo: "2222-5678",
-            direc: "San José, Costa Rica",
-            año_egreso: "2022",
-            nombre_usuario: "laurag",
-        };
+        if (!usuario_id) {
+        setMensaje("ID de usuario no encontrado.");
+        return;
+        }
 
-        setGraduado(mock);
-        setForm({
-            correo_elect: mock.correo_elect,
-            tel_personal: mock.tel_personal,
-            tel_trabajo: mock.tel_trabajo,
-            direc: mock.direc,
+        fetch("/api/me", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuario_id }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.error) {
+            setMensaje(data.error);
+            return;
+            }
+
+            setGraduado(data);
+            setForm({
+            correo_elect: data.correo_elect,
+            tel_personal: data.tel_personal,
+            tel_trabajo: data.tel_trabajo,
+            direc: data.direc,
+            });
+        })
+        .catch((err) => {
+            console.error("Error al obtener datos:", err);
+            setMensaje("Error al obtener datos del servidor.");
         });
     }, []);
 
@@ -68,30 +64,36 @@ export default function MePage() {
     };
 
     const guardarCambios = async () => {
-        // Simulación de guardado
-        // const res = await fetch("/api/me", { ... });
-        // const result = await res.json();
-        // setMensaje(result.message || "Datos actualizados correctamente.");
+        const usuario_id = localStorage.getItem("usuario_id");
 
-        // Actualiza la info mostrada
-        setGraduado((prev) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                correo_elect: form.correo_elect || prev.correo_elect,
-                tel_personal: form.tel_personal || prev.tel_personal,
-                tel_trabajo: form.tel_trabajo || prev.tel_trabajo,
-                direc: form.direc || prev.direc,
-            };
+        if (!usuario_id) {
+        setMensaje("ID de usuario no encontrado.");
+        return;
+        }
+
+        try {
+        const res = await fetch("/api/me", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario_id, ...form }),
         });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            setMensaje("Datos actualizados correctamente.");
+            setGraduado((prev) => prev ? { ...prev, ...form } as Graduado : prev);
+        } else {
+            setMensaje(result.error || "Error al guardar.");
+        }
+        } catch (error) {
+        console.error("Error al guardar:", error);
+        setMensaje("Error en el servidor.");
+        }
     };
 
     const cambiarContra = async () => {
-        // Simulación de actualización de contraseña
-        // const res = await fetch("/api/usuarios/me/password", { ... });
-        // const result = await res.json();
-        // setMensaje(result.message || "Contraseña actualizada correctamente.");
-
+        // Acá podrías crear un endpoint aparte como /api/me/password para cambiarla
         setMensaje("Contraseña actualizada correctamente. (Simulado)");
         setContraseña("");
     };
