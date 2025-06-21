@@ -1,6 +1,6 @@
 # Proyecto Next.js - Gestión de Graduados
 
-## Requisitos para ejecutar el proyecto
+## Requisitos para ejecutar el proyecto de manera local
 
 1. Instalar dependencias:
 ```bash
