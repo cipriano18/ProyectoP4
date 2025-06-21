@@ -34,7 +34,7 @@ Puedes iniciar sesión con los siguientes usuarios para acceder a las diferentes
 | Rol          | Usuario  | Contraseña  |
 |--------------|----------|-------------|
 | **Administrador** | `analu123` | `secure123` |
-| **Graduado**      | `reyner`   | `1234`      |
+| **Graduado**      | `juanga`   | `1234`      |
 
 ## Vista de administradores
 ![Image](https://github.com/user-attachments/assets/21c92c1a-de4b-4923-b971-c0f1e7c2bdda)
