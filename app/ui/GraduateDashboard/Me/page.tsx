@@ -93,10 +93,37 @@ import { UserIcon } from '@heroicons/react/24/outline';
     };
 
     const cambiarContra = async () => {
-        // Acá podrías crear un endpoint aparte como /api/me/password para cambiarla
-        setMensaje("Contraseña actualizada correctamente. (Simulado)");
-        setContraseña("");
+        const usuario_id = localStorage.getItem("usuario_id");
+
+        if (!usuario_id || !contraseña) {
+            setMensaje("Debe ingresar la nueva contraseña.");
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/me/password", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                usuario_id: Number(usuario_id),
+                nueva_contrasenia: contraseña,
+            }),
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+            setMensaje("Contraseña actualizada correctamente.");
+            setContraseña("");
+            } else {
+            setMensaje(result.error || "Error al actualizar contraseña.");
+            }
+        } catch (error) {
+            console.error("Error al cambiar contraseña:", error);
+            setMensaje("Error en el servidor.");
+        }
     };
+
 
     if (!graduado) return <p className="text-white">Cargando...</p>;
 

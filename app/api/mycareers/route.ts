@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const carreras = graduado.gra_graduadoxcarrera.map((relacion) => relacion.gra_carreras);
+    const carreras = graduado.gra_graduadoxcarrera.map((relacion: any) => relacion.gra_carreras);
+
 
     return NextResponse.json(carreras);
   } catch (error) {

@@ -25,8 +25,8 @@ export async function POST(req: NextRequest) {
         gra_cursos: true,
       },
     });
-
-    const cursos = cursosInscritos.map((item) => item.gra_cursos);
+  
+    const cursos = cursosInscritos.map((item: any) => item.gra_cursos);
 
     return NextResponse.json(cursos);
   } catch (error) {
