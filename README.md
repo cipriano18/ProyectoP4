@@ -20,6 +20,13 @@ DATABASE_URL="postgresql://graduados_user:oCpZhue1dXCY49sGekiumkaQa8fpw70M@dpg-d
 ```bash
 npm run dev
 ```
+
+## 🌍 Deploy en Vercel
+
+La aplicación está desplegada en:
+
+👉 [https://p4-proye-csfz.vercel.app](https://p4-proye-csfz.vercel.app)
+
 ## Usuarios de prueba
 
 Puedes iniciar sesión con los siguientes usuarios para acceder a las diferentes vistas:
